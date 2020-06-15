@@ -2,11 +2,14 @@ service: local-news-backend
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.7
+  profile: ryan
   stage: dev
+  region: us-east-1
 
 package:
-  individually: true
+  exclude:
+    - venv/** # virtualenv
 
 functions:
   getNewArticles:
@@ -15,6 +18,6 @@ functions:
 plugins:
   - serverless-python-requirements
 
-custom:
-  pythonRequirements:
-    dockerizePip: non-linux
+# custom:
+#   pythonRequirements:
+#     dockerizePip: non-linux
