@@ -1,0 +1,13 @@
+service: local-news-backend
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+
+package:
+  individually: true
+
+functions:
+  hello:
+    handler: functions/hello/handler.main
