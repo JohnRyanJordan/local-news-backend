@@ -9,5 +9,12 @@ package:
   individually: true
 
 functions:
-  hello:
-    handler: functions/hello/handler.main
+  getNewArticles:
+    handler: functions/getNewArticles/handler.main
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux

@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "source" : "KNWA FOX24",
+      "rssurl" : "https://www.nwahomepage.com/feed/"
+    },
+    {
+      "source" : "Arkansas Times",
+      "rssurl" : "https://arktimes.com/feed"
+    }
+  ]
+}
