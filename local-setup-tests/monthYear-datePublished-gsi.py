@@ -7,7 +7,7 @@ client = boto3.client('dynamodb', endpoint_url="http://localhost:8000")
 try:
     resp = client.update_table(
         TableName="arkansas-news",
-        # Any attributes used in your new global secondary index must be declared in AttributeDefinitions
+        # Any attributes used in new global secondary index must be declared in AttributeDefinitions
         AttributeDefinitions=[
             {
                 "AttributeName": "monthYear",

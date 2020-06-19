@@ -31,11 +31,6 @@ resp = table.query(
     KeyConditionExpression=Key('monthYear').eq(now.isoformat()[0:7]) & Key('datePublished').between(three_hours_ago.isoformat(), now.isoformat())
 )
 
-# # LastEvaluatedKey indicates that there are more results
-# while 'LastEvaluatedKey' in response:
-#     response = table.query(ExclusiveStartKey=response['LastEvaluatedKey'])
-#     data.update(response['Items'])
-#
 print("The query returned the following items:")
 for item in resp['Items']:
     print(item)

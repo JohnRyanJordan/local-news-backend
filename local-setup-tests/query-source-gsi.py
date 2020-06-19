@@ -26,15 +26,11 @@ now = datetime.datetime.now()
 three_hours_ago = now - datetime.timedelta(hours=3)
 
 resp = table.query(
-    # Add the name of the index you want to use in your query.
     IndexName="source_datePublished",
-    KeyConditionExpression=Key('source').eq('KNWA FOX24') & Key('datePublished').between(three_hours_ago.isoformat(), now.isoformat())
+    KeyConditionExpression=Key('source').eq('KNWA FOX24') & Key('datePublished').between(three_hours_ago.isoformat(), now.isoformat()),
+    Limit= 1,
+    ScanIndexForward=False
 )
-
-# # LastEvaluatedKey indicates that there are more results
-# while 'LastEvaluatedKey' in response:
-#     response = table.query(ExclusiveStartKey=response['LastEvaluatedKey'])
-#     data.update(response['Items'])
 
 print("The query returned the following items:")
 for item in resp['Items']:

@@ -11,22 +11,12 @@ def create_arkansas_news_table(dynamodb=None):
                 'AttributeName': 'articleid',
                 'KeyType': 'HASH'  # Partition key
             }
-            # ,
-            # {
-            #     'AttributeName': 'date',
-            #     'KeyType': 'RANGE'  # Sort key
-            # }
         ],
         AttributeDefinitions=[
             {
                 'AttributeName': 'articleid',
                 'AttributeType': 'S'
             }
-            # ,
-            # {
-            #     'AttributeName': 'date',
-            #     'AttributeType': 'S'
-            # }
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 10,
