@@ -9,9 +9,9 @@ from decimal import Decimal
 from botocore.errorfactory import ClientError
 import requests, json, re
 
-dynamodb = boto3.resource('dynamodb')
+# dynamodb = boto3.resource('dynamodb')
 # # For Local dev
-# dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000") # Connect to local dynamodb instance
+dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000") # Connect to local dynamodb instance
 
 table = dynamodb.Table('arkansas-news')
 print("Connected to table")
@@ -90,6 +90,7 @@ def extract_articles(feeds):
         print('Number of entries "', src, '": ', len(val.entries))
 
         for entry in val.entries:
+            source = src
             title = get_title(entry)
             link = get_link(entry)
             author = get_author(entry)
@@ -99,11 +100,13 @@ def extract_articles(feeds):
             # id = get_id(entry)
             guid = get_guid(entry)
             obj = {
+                "source": src,
                 "title": title,
                 "link": link,
                 "author": author,
                 "description": description,
                 "datePublished": datePublished,
+                "monthYear": datePublished[0:7],
                 "content": content,
                 # "id": id,
                 "guid": guid
@@ -154,7 +157,9 @@ def add_new_articles():
         item = update[su]
         print(item['guid'])
         try:
-            rsp = table.put_item(Item={"articleid":item['guid'], "title":item['title'], "description":item['description'], "link":item['link'], "author": item['author'], "datePublished": item['datePublished'], "content": item['content'] })
+            rsp = table.put_item(Item={
+            "articleid":item['guid'], "title":item['title'], "source":item['source'], "description":item['description'], "link":item['link'],
+            "author": item['author'], "datePublished": item['datePublished'], "monthYear": item['monthYear'], "content": item['content'] })
         except ClientError as e:
             print("passed")
             pass

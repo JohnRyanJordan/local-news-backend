@@ -18,7 +18,7 @@ def get_article(articleid, dynamodb=None):
 
 
 if __name__ == '__main__':
-    article = get_article("https://www.nwahomepage.com/?p=479368",)
+    article = get_article("https://www.nwahomepage.com/?p=485560",)
     if article:
         print("Get article succeeded:")
         pprint(article)
