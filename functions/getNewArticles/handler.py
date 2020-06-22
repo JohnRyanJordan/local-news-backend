@@ -8,10 +8,17 @@ from botocore.vendored import requests
 from decimal import Decimal
 from botocore.errorfactory import ClientError
 import requests, json, re
+import http.client
+from base64 import b64encode
 
-# dynamodb = boto3.resource('dynamodb')
+usernameAndKey = os.environ['URL_META_APIKEY']
+urlMetaConn = http.client.HTTPSConnection("api.urlmeta.org")
+userAndPass = b64encode(bytes(usernameAndKey, encoding='utf-8')).decode("ascii")
+headers = { 'Authorization' : 'Basic %s' %  userAndPass }
+
+dynamodb = boto3.resource('dynamodb')
 # # For Local dev
-dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000") # Connect to local dynamodb instance
+# dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000") # Connect to local dynamodb instance
 
 table = dynamodb.Table('arkansas-news')
 print("Connected to table")
@@ -78,6 +85,12 @@ def get_datePublished(article):
     date = dateparser.parse(article.published)
     return date.isoformat()
 
+def get_thumbnailImage(article):
+    urlMetaConn.request("GET", "/?url="+article.id, headers=headers)
+    res = urlMetaConn.getresponse()
+    data = json.loads(res.read())
+    return data["meta"]["image"]
+
 # Aggregate all articles from listed sources
 def extract_articles(feeds):
     keys = []
@@ -96,6 +109,7 @@ def extract_articles(feeds):
             author = get_author(entry)
             description = get_description(entry)
             datePublished = get_datePublished(entry)
+            image = get_thumbnailImage(entry)
             content = get_content(entry)
             # id = get_id(entry)
             guid = get_guid(entry)
@@ -107,6 +121,7 @@ def extract_articles(feeds):
                 "description": description,
                 "datePublished": datePublished,
                 "monthYear": datePublished[0:7],
+                "image": image,
                 "content": content,
                 # "id": id,
                 "guid": guid
@@ -159,7 +174,7 @@ def add_new_articles():
         try:
             rsp = table.put_item(Item={
             "articleid":item['guid'], "title":item['title'], "source":item['source'], "description":item['description'], "link":item['link'],
-            "author": item['author'], "datePublished": item['datePublished'], "monthYear": item['monthYear'], "content": item['content'] })
+            "author": item['author'], "datePublished": item['datePublished'], "monthYear": item['monthYear'], "image": item['image'], "content": item['content'] })
         except ClientError as e:
             print("passed")
             pass

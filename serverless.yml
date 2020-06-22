@@ -2,22 +2,25 @@ service: local-news-backend
 
 provider:
   name: aws
+  region: us-east-1
   runtime: python3.7
   profile: ryan
-  stage: dev
-  region: us-east-1
+  stage: ${self:custom.stage}
+  environment: ${self:custom.environment}
 
 package:
   exclude:
     - venv/** # virtualenv
 
-functions:
-  getNewArticles:
-    handler: functions/getNewArticles/handler.main
-
 plugins:
   - serverless-python-requirements
 
-# custom:
-#   pythonRequirements:
-#     dockerizePip: non-linux
+custom:
+  defaultStage: dev
+  stage: ${opt:stage, self:custom.defaultStage} # 'dev' is default unless overriden by --stage flag
+  environment: ${file(./config.env.yml):${self:custom.stage}}
+
+functions:
+  getNewArticles:
+    handler: functions/getNewArticles/handler.main
+    timeout: 900 # optional, in seconds, default is 6

@@ -1,3 +1,6 @@
+# Secrets
+config.env.yml
+
 # OS
 .DS_Store
 
