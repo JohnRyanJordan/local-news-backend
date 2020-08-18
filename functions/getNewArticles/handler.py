@@ -56,6 +56,23 @@ def get_feed(sources):
         feed[attr] = parse_rss(value)
     return feed
 
+def keys_exist(element, *keys):
+    '''
+    Check if *keys (nested) exists in `element` (dict).
+    '''
+    if not isinstance(element, dict):
+        raise AttributeError('keys_exists() expects dict as first argument.')
+    if len(keys) == 0:
+        raise AttributeError('keys_exists() expects at least two arguments, one given.')
+
+    _element = element
+    for key in keys:
+        try:
+            _element = _element[key]
+        except KeyError:
+            return False
+    return True
+
 # Article attribute helper functions
 def get_title(article):
     return article.title
@@ -64,16 +81,28 @@ def get_link(article):
     return article.link
 
 def get_author(article):
-    return article.author
+    if keys_exist(article, "author"):
+        return article.author
+    else:
+        return "NA"
 
 def get_authors(article):
-    return article.authors
+    if keys_exist(article, "authors"):
+        return article.authors
+    else:
+        return "NA"
 
 def get_description(article):
-    return article.summary
+    if keys_exist(article, "summary"):
+        return article.summary
+    else:
+        return "NA"
 
 def get_content(article):
-    return article.content
+    if keys_exist(article, "content"):
+        return article.content
+    else:
+        return "NA"
 
 def get_guid(article):
     return article.id
@@ -89,7 +118,11 @@ def get_thumbnailImage(article):
     urlMetaConn.request("GET", "/?url="+article.id, headers=headers)
     res = urlMetaConn.getresponse()
     data = json.loads(res.read())
-    return data["meta"]["image"]
+    # print('Keys: meta > image (exists):', keys_exist(data, "meta", "image"))
+    if keys_exist(data, "meta", "image"):
+        return data["meta"]["image"]
+    else:
+        return "NA"
 
 # Aggregate all articles from listed sources
 def extract_articles(feeds):

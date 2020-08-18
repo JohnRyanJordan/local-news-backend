@@ -7,6 +7,14 @@
     {
       "source" : "Arkansas Times",
       "rssurl" : "https://arktimes.com/feed"
+    },
+    {
+      "source" : "Southwest Arkansas News",
+      "rssurl" : "https://www.swarkansasnews.com/feed/"
+    },
+    {
+      "source" : "Arkansas Business",
+      "rssurl" : "https://www.arkansasbusiness.com/rss/daily-report"
     }
   ]
 }
